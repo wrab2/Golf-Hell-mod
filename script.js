@@ -1,4 +1,5 @@
 debug = false
+const amountOfLevels = 10
 renderDistance = 10
 testRange = 0.0001
 currentLevel = 1
@@ -141,7 +142,8 @@ function loadLevel(x, data) {
 }
 
 function checkLoadLevel(x) {
-	if (x==1 || game.levelsBeaten[x-2]) loadLevel(x)
+	//if (x==1 || game.levelsBeaten[x-2]) loadLevel(x)
+	loadLevel(x)
 }
 
 function nextLevel() {
@@ -207,7 +209,7 @@ function loadMenu() {
 	document.getElementById("menutoprightcorner").style.display = "block"
 	
 	loadLevelStats(0)
-	for (i=0;i<50;i++) {
+	for (i=0;i<amountOfLevels;i++) {
 		if (game.levelsBeaten[i]) {document.getElementsByClassName("level")[i].style.backgroundColor = "#393"}
 		else if (i==0 || game.levelsBeaten[i-1]) {document.getElementsByClassName("level")[i].style.backgroundColor = "#999"}
 		else {document.getElementsByClassName("level")[i].style.backgroundColor = "#666"}
@@ -229,18 +231,19 @@ function loadLevelStats(x) {
 			}
 		}
 		document.getElementById("levelStats").innerHTML = "<span style='color: #080'>" + totalLevelsBeaten + "/45 levels beaten <span id='stars'></span></span><br>Total hits: " + totalHits + "<br>Total time: " + formatTime(totalTime)
-		if (totalLevelsBeaten >= 45) {
+		/*if (totalLevelsBeaten >= 45) {
 			document.getElementById("stars").innerHTML += "<span style='color: #b80'>★</span>"
 			document.getElementById("hyperHell").style.display = "block"
-		}
+		}*/
 		if (totalLevelsBeaten >= 50) document.getElementById("stars").innerHTML += "<span style='color: #b80'>★</span>"
 	}
 	else if (game.levelsBeaten[x-1]) {document.getElementById("levelStats").innerHTML = "<span style='color: #088'>" + levels[x].name + "</span><br>Least hits: " + game.levelHits[x-1] + ", Least time: " + formatTime(game.levelTime[x-1])}
-	else {document.getElementById("levelStats").innerHTML = "<span style='color: #088'>" + levelName + "</span><br>Level not completed"}
+	else {document.getElementById("levelStats").innerHTML = "<span style='color: #088'>" + levels[x].name + "</span><br>Level not completed"}
 }
 
 function update(x=1) {
 	if (ballMoving) {
+		let collidesWith
 		for (i=0;i<x;i++) {
 			z=10
 			while ((xPos != finalPos[0] || yPos != finalPos[1]) && z>0) {
@@ -309,12 +312,20 @@ function update(x=1) {
 				else if (Math.min(nextXBorderDist, nextYBorderDist, finalPosDist) == finalPosDist) {
 					xPos = finalPos[0]; yPos = finalPos[1]
 					if (antiGravity) {
-						if (xOutOfRange() || yOutOfRange() || levelGrid[Math.floor(yPos / 25 - testRange) * gridWidth + Math.floor(xPos / 25 - testRange)] != 1) {yVel -= 0.9}
-						else {xVel = xVel * 0.9}
+						collidesWith = levelGrid[Math.floor(yPos / 25 - testRange) * gridWidth + Math.floor(xPos / 25 - testRange)]
+						if (xOutOfRange() || yOutOfRange() || (collidesWith != 1 && collidesWith != 9)) {
+							yVel -= 0.9
+						}	else {
+							if( collidesWith != 9) xVel = xVel * 0.9
+						}
 					}
 					else {
-						if (xOutOfRange() || yOutOfRange() || levelGrid[Math.floor(yPos / 25) * gridWidth + Math.floor(xPos / 25 + testRange)] != 1) {yVel += 0.9}
-						else {xVel = xVel * 0.9}
+						collidesWith = levelGrid[Math.floor(yPos / 25 + testRange) * gridWidth + Math.floor(xPos / 25 + testRange)]
+						if (xOutOfRange() || yOutOfRange() || (collidesWith != 1 && collidesWith != 9)) {
+							yVel += 0.9
+						} else {
+							if( collidesWith != 9) xVel = xVel * 0.9
+						}
 					}
 					//Detecting collisions
 					//Collisions should never happen on the final position! They should only happen on X and Y borders! I have no fucking clue why X/Y borders sometimes don't detect
@@ -322,7 +333,7 @@ function update(x=1) {
 					//else if ((xPos % 25 < 1 || xPos % 25 > 24) && xVel < 0 && Math.floor(xPos / 25) > 0 && !yOutOfRange() && levelGrid[Math.floor(yPos / 25) * gridWidth + Math.floor(xPos / 25 - testRange)] == 1) {console.log("F-Hit left wall"); z=0; xVel = (0-xVel) * 0.8}
 					//else if (yVel > 0 && !xOutOfRange() && !yOutOfRange() && levelGrid[Math.floor(yPos / 25 + testRange) * gridWidth + Math.floor(xPos / 25)] == 1) {console.log("F-Hit floor"); z=0; yVel = (0-yVel)/2; xVel = xVel * 0.8}
 					//else if (yVel < 0 && !xOutOfRange() && !yOutOfRange() && levelGrid[Math.floor(yPos / 25 - testRange) * gridWidth + Math.floor(xPos / 25)] == 1) {console.log("F-Hit ceiling"); z=0; yVel = (0-yVel)/2; xVel = xVel * 0.8}
-					let collidesWith = levelGrid[Math.floor(yPos / 25) * gridWidth + Math.floor(xPos / 25)]
+					collidesWith = levelGrid[Math.floor(yPos / 25) * gridWidth + Math.floor(xPos / 25)]
 					if (!xOutOfRange() && !yOutOfRange() && collidesWith == 3) {
 						resetLevel()
 						noOfHits = 0
@@ -559,6 +570,10 @@ function renderGrid(x,y) {
 				//Creates down arrows
 				else if (levelGrid[i * gridWidth + j] == 8) {
 					ctx.drawImage(sprites["arrows2"], 25*(j % gridWidth) + 250 - x, i * 25 + 250 - y, 25, 25);
+				}
+				//Draws nogravity
+				else if (levelGrid[i * gridWidth + j] == 9) {
+					ctx.drawImage(sprites["nogravity"], 25*(j % gridWidth) + 250 - x, i * 25 + 250 - y, 25, 25);
 				}
 				/*else if (currentLevel == 1 && i * gridWidth + j == 39 && game.levelsBeaten[44]) {
 					ctx.fillStyle = "black"

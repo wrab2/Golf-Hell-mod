@@ -269,7 +269,8 @@ function setTo(event) {
 }
 
 function exportEditor(){
-	navigator.clipboard.writeText(game.editor)
+	if(event.shiftKey)navigator.clipboard.writeText(game.editor);
+	else navigator.clipboard.writeText(LZString.compressToBase64(game.editor))
 	let btn=document.getElementById("edexpbtn")
 	btn.style.background=("#449944")
 	btn.innerHTML="Copied!"
@@ -280,13 +281,16 @@ function exportEditor(){
 }
 
 function importEditor(imported = undefined) {
-	if (imported === undefined) imported = (prompt("paste your level here"))
-	if (imported.length>13){
+	if(imported === undefined && event.shiftKey) imported = prompt("paste your level here")
+	else if (imported === undefined) imported = LZString.decompressFromBase64(prompt("paste your level here"))
+	if (imported.length>3){
 		game.editor = imported
 		editorTemp.width = Number(game.editor.substr(0,3))
 		editorTemp.height = (game.editor.length-9)/(Number(game.editor.substr(0,3)))
 		editorTemp.spawn = [Number(game.editor.substr(3,3)),Number(game.editor.substr(6,3))] 
 		updateEditor()
+		document.getElementById("cadd").textContent = editorTemp.width
+		document.getElementById("radd").textContent = editorTemp.height
 		save()
 	} else {
 		alert("incorrect import")

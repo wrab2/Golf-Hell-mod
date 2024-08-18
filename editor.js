@@ -281,8 +281,8 @@ function exportEditor(){
 }
 
 function importEditor(imported = undefined) {
-	if(imported === undefined && event.shiftKey) imported = prompt("paste your level here")
-	else if (imported === undefined) imported = LZString.decompressFromBase64(prompt("paste your level here"))
+	if(imported === undefined) imported = prompt("paste your level here")
+	if(isNaN(Number(imported.substring(0,9)))){imported = LZString.decompressFromBase64(imported)}
 	if (imported.length>3){
 		game.editor = imported
 		editorTemp.width = Number(game.editor.substr(0,3))

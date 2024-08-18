@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<!-- saved from url=(0035)https://demonin.com/games/golfHell/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width">
+  <title>Golf Hell</title>
+	<link rel="icon" type="image/x-icon" href="./icon.png">
+  <link href="./style.css?v=110" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+	<h2 id="gameTitle"><img src="./media/icon.png"> Golf Hell mod v1.1.0</h2><br><br>
+	<div id="mainMenu">
+		<h1 id="stats" style="display: none;"><span id="levelName" style="color: #088">Level select</span><br>Hits: <span id="hits">0</span><br>Deaths: <span id="deaths" style="color: #844">0</span><br>Time: <span id="time">0</span></h1>
+		<p id="keybinds" style="display: none;">Press R to restart<br>Press ESC to return to the menu</p>
+		<h1 id="levelStats" style="display: block;"><span style="color: #080">0/45 levels beaten <span id="stars"></span></span><br>Total hits: 0<br>Total time: 00:00.00</h1>
+		<p id="debugStats"></p>
+		<canvas id="grid" width="500px" height="500px"></canvas>
+		<div id="overlay" style="display: block;">
+			<div id="finishMessage">
+				<br><h1 style="text-align: center; font-size: 32px;">Level complete!</h1><br>
+				<h1 style="margin-left: 16px" id="finishStats"></h1>
+				<button id="nextlvlbtn" style="position: absolute; bottom: 50px; left: 75px; width: 150px" onclick="nextLevel()">Next level</button>
+				<button id="toeditorbtn" style="position: absolute; bottom: 50px; left: 75px; width: 150px" onclick="openEditor()">To editor</button>
+				<button style="position: absolute; bottom: 4px; left: 75px; width: 150px; color: #088" onclick="loadLevel(currentLevel, game.editor)">Retry level</button>
+			</div>
+			<div id="levelSelect" style="display: block;">
+				<h1 style="font-size: 48px; margin-bottom: 20px; color: #048">Golfing on Tuesday</h1>
+				<div class="levelRow">
+					<div class="level row1" onclick="checkLoadLevel(1)" onmouseover="loadLevelStats(1)" onmouseout="loadLevelStats(0)" style="background-color: rgb(153, 153, 153);">1</div>
+					<div class="level row1" onclick="checkLoadLevel(2)" onmouseover="loadLevelStats(2)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">2</div>
+					<div class="level row1" onclick="checkLoadLevel(3)" onmouseover="loadLevelStats(3)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">3</div>
+					<div class="level row1" onclick="checkLoadLevel(4)" onmouseover="loadLevelStats(4)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">4</div>
+					<div class="level row1" onclick="checkLoadLevel(5)" onmouseover="loadLevelStats(5)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">5</div>
+				</div>
+				<h1 style="font-size: 48px; margin-bottom: 20px; margin-top: 40px; color: #606">Lust</h1>
+				<div class="levelRow">
+					<div class="level row2" onclick="checkLoadLevel(6)" onmouseover="loadLevelStats(6)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">1</div>
+					<div class="level row2" onclick="checkLoadLevel(7)" onmouseover="loadLevelStats(7)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">2</div>
+					<div class="level row2" onclick="checkLoadLevel(8)" onmouseover="loadLevelStats(8)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">3</div>
+					<div class="level row2" onclick="checkLoadLevel(9)" onmouseover="loadLevelStats(9)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">4</div>
+					<div class="level row2" onclick="checkLoadLevel(10)" onmouseover="loadLevelStats(10)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">5</div>
+				</div>
+				<h1 style="font-size: 48px; margin-bottom: 20px; margin-top: 40px; color: #b60">Gluttony</h1>
+				<div class="levelRow">
+					<div class="level row3" onclick="checkLoadLevel(11)" onmouseover="loadLevelStats(11)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">1</div>
+					<div class="level row3" onclick="checkLoadLevel(12)" onmouseover="loadLevelStats(12)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">2</div>
+					<div class="level row3" onclick="checkLoadLevel(13)" onmouseover="loadLevelStats(13)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">3</div>
+					<div class="level row3" onclick="checkLoadLevel(14)" onmouseover="loadLevelStats(14)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">4</div>
+					<div class="level row3" onclick="checkLoadLevel(15)" onmouseover="loadLevelStats(15)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">5</div>
+				</div>
+				<h1 style="font-size: 48px; margin-bottom: 20px; margin-top: 40px; color: #306">Greed</h1>
+				<div class="levelRow">
+					<div class="level row4" onclick="checkLoadLevel(16)" onmouseover="loadLevelStats(16)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">1</div>
+					<div class="level row4" onclick="checkLoadLevel(17)" onmouseover="loadLevelStats(17)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">2</div>
+					<div class="level row4" onclick="checkLoadLevel(18)" onmouseover="loadLevelStats(18)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">3</div>
+					<div class="level row4" onclick="checkLoadLevel(19)" onmouseover="loadLevelStats(19)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">4</div>
+					<div class="level row4" onclick="checkLoadLevel(20)" onmouseover="loadLevelStats(20)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">5</div>
+				</div>
+				<h1 style="font-size: 48px; margin-bottom: 20px; margin-top: 40px; color: #40f">Wrath</h1>
+				<div class="levelRow">
+					<div class="level row5" onclick="checkLoadLevel(21)" onmouseover="loadLevelStats(21)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">1</div>
+					<div class="level row5" onclick="checkLoadLevel(22)" onmouseover="loadLevelStats(22)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">2</div>
+					<div class="level row5" onclick="checkLoadLevel(23)" onmouseover="loadLevelStats(23)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">3</div>
+					<div class="level row5" onclick="checkLoadLevel(24)" onmouseover="loadLevelStats(24)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">4</div>
+					<div class="level row5" onclick="checkLoadLevel(25)" onmouseover="loadLevelStats(25)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">5</div>
+				</div>
+				<h1 style="font-size: 48px; margin-bottom: 20px; margin-top: 40px; color: #0b4">Heresy</h1>
+				<div class="levelRow">
+					<div class="level row6" onclick="checkLoadLevel(26)" onmouseover="loadLevelStats(26)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">1</div>
+					<div class="level row6" onclick="checkLoadLevel(27)" onmouseover="loadLevelStats(27)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">2</div>
+					<div class="level row6" onclick="checkLoadLevel(28)" onmouseover="loadLevelStats(28)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">3</div>
+					<div class="level row6" onclick="checkLoadLevel(29)" onmouseover="loadLevelStats(29)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">4</div>
+					<div class="level row6" onclick="checkLoadLevel(30)" onmouseover="loadLevelStats(30)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">5</div>
+				</div>
+				<h1 style="font-size: 48px; margin-bottom: 20px; margin-top: 40px; color: #b30">Violence</h1>
+				<div class="levelRow">
+					<div class="level row7" onclick="checkLoadLevel(31)" onmouseover="loadLevelStats(31)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">1</div>
+					<div class="level row7" onclick="checkLoadLevel(32)" onmouseover="loadLevelStats(32)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">2</div>
+					<div class="level row7" onclick="checkLoadLevel(33)" onmouseover="loadLevelStats(33)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">3</div>
+					<div class="level row7" onclick="checkLoadLevel(34)" onmouseover="loadLevelStats(34)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">4</div>
+					<div class="level row7" onclick="checkLoadLevel(35)" onmouseover="loadLevelStats(35)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">5</div>
+				</div>
+				<h1 style="font-size: 48px; margin-bottom: 20px; margin-top: 40px; color: #0cc">Fraud</h1>
+				<div class="levelRow">
+					<div class="level row8" onclick="checkLoadLevel(36)" onmouseover="loadLevelStats(36)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">1</div>
+					<div class="level row8" onclick="checkLoadLevel(37)" onmouseover="loadLevelStats(37)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">2</div>
+					<div class="level row8" onclick="checkLoadLevel(38)" onmouseover="loadLevelStats(38)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">3</div>
+					<div class="level row8" onclick="checkLoadLevel(39)" onmouseover="loadLevelStats(39)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">4</div>
+					<div class="level row8" onclick="checkLoadLevel(40)" onmouseover="loadLevelStats(40)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">5</div>
+				</div>
+				<h1 style="font-size: 48px; margin-bottom: 20px; margin-top: 40px; color: #f00">Treachery</h1>
+				<div class="levelRow" style="margin-bottom: 10px">
+					<div class="level row9" onclick="checkLoadLevel(41)" onmouseover="loadLevelStats(41)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">1</div>
+					<div class="level row9" onclick="checkLoadLevel(42)" onmouseover="loadLevelStats(42)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">2</div>
+					<div class="level row9" onclick="checkLoadLevel(43)" onmouseover="loadLevelStats(43)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">3</div>
+					<div class="level row9" onclick="checkLoadLevel(44)" onmouseover="loadLevelStats(44)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">4</div>
+					<div class="level row9" onclick="checkLoadLevel(45)" onmouseover="loadLevelStats(45)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">5</div>
+				</div>
+				<div id="hyperHell" style="display: none">
+					<h1 style="font-size: 48px; margin-bottom: 20px; margin-top: 40px; background: -webkit-linear-gradient(#f00, #f80); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Hyper-Hell (bonus)</h1>
+					<div class="levelRow" style="margin-bottom: 10px">
+						<div class="level row10" onclick="checkLoadLevel(46)" onmouseover="loadLevelStats(46)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">1</div>
+						<div class="level row10" onclick="checkLoadLevel(47)" onmouseover="loadLevelStats(47)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">2</div>
+						<div class="level row10" onclick="checkLoadLevel(48)" onmouseover="loadLevelStats(48)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">3</div>
+						<div class="level row10" onclick="checkLoadLevel(49)" onmouseover="loadLevelStats(49)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">4</div>
+						<div class="level row10" onclick="checkLoadLevel(50)" onmouseover="loadLevelStats(50)" onmouseout="loadLevelStats(0)" style="background-color: rgb(102, 102, 102);">5</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="menutoprightcorner">
+			<button id="editorBtn" onclick="openEditor()">Level editor</button>
+		</div>
+	</div>
+	<div id="editorMenu" style="display: none;">
+		
+
+
+
+
+	</div>
+	<script src="./levels.js?v=1104"></script>
+  <script src="./script.js?v=1101"></script>
+  <script src="./editor.js?v=1101"></script>
+
+
+</body></html>
